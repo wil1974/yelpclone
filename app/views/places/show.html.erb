@@ -1,0 +1,67 @@
+<div class="row">
+  <div class="col-md-3">
+    <h3><%= @place.name %></h3>
+    <!-- Display average Raty ratings -->
+    <div class="average"></div>
+    <p><strong>Address</strong>
+    <%= @place.address %>
+    </p>
+      <p>
+      <strong>Phone</strong>
+      <%= @place.phone %>
+    </p>
+    <p>
+      <strong>Website</strong>
+      <%= @place.website %>
+    </p>
+    <p>
+      <strong>Description</strong>
+      <%= @place.description %>
+    </p>
+    <!-- GoogleMap -->
+    <div id="map" style="width: 230px; height: 230px"></div>
+  </div>
+  <div class="col-md-9">
+    <h3>Write Review</h3>
+    <%= render 'reviews/form' %>
+    <h5>All Reviews</h5>
+    <%= render @reviews %>
+  </div>
+</div>
+
+
+ <script type="text/javascript">
+      var map;
+      var myCenter = {lat: <%= @place.latitude %>, lng: <%= @place.longitude %>};
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: myCenter,
+          zoom: 15
+        });
+
+        var marker = new google.maps.Marker({
+            position: myCenter,
+            map: map,
+        })
+      }
+
+    // Iterate over each review to add Raty rating to the :score field
+      <% @reviews.each do |review| %>
+       $(".score_<%= review.id %>").raty({
+          starOn: "<%= image_path('star-on.png') %>",
+          starOff: "<%= image_path('star-off.png') %>",
+          score: '<%= review.score %>',
+          readOnly: true
+        });
+      <% end %>
+
+
+      // display raty rating for average
+      $(".average").raty({
+        starOn: "<%= image_path('star-on.png') %>",
+        starOff: "<%= image_path('star-off.png') %>",
+        score: '<%= @place.total_average %>',
+        readOnly: true
+      });
+</script>
+
